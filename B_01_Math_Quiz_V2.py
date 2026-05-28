@@ -1,7 +1,13 @@
+#This imports the random module which allows
+#the code to randomly generate a number and question type
 import random
 
-
+#This function checks if the user enters a valid answer (yes/no) & (y/n)
+#It accepts full words (yes/no) and the first letter (y/n)
+#This function will loop until the user enters a valid answer
 def string_checker(question, valid_ans=('yes', 'no')):
+
+    #Prints statement if the user doesn't enter a valid option from the list (yes/no)
     error = f"\n\033[95m  [!] Please enter a valid option from the following list: {valid_ans}\033[0m\n"
 
     while True:
@@ -26,7 +32,7 @@ def instructions():
 
     print("""
     *** 🔴🟧📐 GEOMETRY QUIZ 📐🟧🔴 ***
-    
+
     1) To begin, select the amount of questions you want or infinite mode
     2) You will be given a random question that is either:
        - Angle Rules
@@ -35,14 +41,14 @@ def instructions():
          - Obtuse Angle   || An angle that is inbetween 91° - 179°
          - Straight Angle || An angle that is exactly 180°
          - Reflex Angle   || An angle that is inbetween 181° - 359°
-         
+
     You will be given a random angle inbetween 1° - 359° and you have to
     answer what type of angle it is.
-    
+
     eg - "An angle measures 54°. What type of angle is it?"
-    
+
           The correct answer would be Acute 
-    
+
         - Interior Angles
           - Triangle      || Interior Sum - 180°
           - Quadrilateral || Interior Sum - 360°
@@ -52,19 +58,19 @@ def instructions():
           - Octagon       || Interior Sum - 1080°
           - Nonagon       || Interior Sum - 1260°
           - Decagon       || Interior Sum - 1440°
-    
+
     You will be given a set of angles except for one and you will have to find out 
     what the missing angle is.
-    
+
     eg - "A Triangle has 3 sides."
          "Interior angle sum = 180°"
          "Here are the angles!"
          [ 50, 60 ]
-         
+
          "Find the missing angle:"
-         
+
          The correct answer would be 70°
-        
+
 
          Good Luck and Have Fun!!!!   
     """
@@ -72,17 +78,19 @@ def instructions():
 
 
 # checks for an integer more than 0 ( allows <enter> )
-
 def int_check(question):
     # checks if users integer is equal or more than 1
 
     while True:
-        error = "Please enter an integer that is 1 or more | press <enter> to play infinite mode"
+        error = "Please enter an integer that is 1 or more"
 
         to_check = input(question)
 
         if to_check == "":
             return "infinite"
+
+        if to_check == "xxx":
+            return "xxx"
 
         try:
             response = int(to_check)
@@ -95,11 +103,13 @@ def int_check(question):
         except ValueError:
             print(error)
 
-# equation to find total interior angles of a polygon
+# formula for sum of interior angles
 def interior_angle_sum(n):
     return (n - 2) * 180
 
+
 # generates angle type questions
+# eg - Acute Angles, Right Angle
 def angle_type_ques():
     angle_rules = random.randint(1, 359)  # generates an angle between 1 and 359
 
@@ -111,24 +121,29 @@ def angle_type_ques():
         angle_type = "obtuse"
     elif angle_rules == 180:  # if the angle is equal to 180° then it's a straight angle
         angle_type = "straight angle"
-    elif angle_rules > 180:  # if the angle is above 180° then it's a reflex angle
+    else:  # if the angle is above 180° then it's a reflex angle
         angle_type = "reflex"
 
+    print(f"PSTTT Here's the answer! {angle_type}") # delete after testing!!!!!
     print(f"An angle measures {angle_rules}°. What type of angle is it?")  # prints out the question
 
     user_answer = input("What type of angle is it?  ").lower()
 
+    # exit code
+    if user_answer == "xxx":
+        return "xxx", "User Quit"
+
     if user_answer == angle_type:
-        print("Your CORRECT!")
-        return True, f"An Angle measures {angle_rules}° What type of angle is it? || Your Answer: ({angle_type}) Correct✅✅✅)"
+        print("You're CORRECT!🥳")
+        return True, f"An Angle measures {angle_rules}° What type of angle is it? || Your Answer: ({angle_type}) Correct✅✅✅)" # returns this if the user is correct so that it can be put into question history
     else:
-        print(f"WRONG! it's a {angle_type}")
-        return False, f"An Angle measures {angle_rules}° What type of angle is it? || Your Answer: ({angle_type}) Wrong❌❌❌)"
+        print(f"WRONG!😒 it's a {angle_type}")
+        return False, f"An Angle measures {angle_rules}° What type of angle is it? || Your Answer: ({user_answer}) Wrong❌❌❌)" # returns this if the user is wrong so that it can be put into question history
 
 
-# formula for sum of interior angles
-
+# generates a question with a random shape and missing angle
 def missing_angle_gen():
+    #  list of shapes with the number of sides corresponding to it.
     shape_list = {
         "Triangle": 3,
         "Quadrilateral": 4,
@@ -140,14 +155,15 @@ def missing_angle_gen():
         "Decagon": 10,
     }
 
+    shape_name, sides = random.choice(
+        list(shape_list.items()))  # chooses a random shape with the number of sides it has
 
-    shape_name, sides = random.choice(list(shape_list.items())) # chooses a random shape with the number of sides it has
-
-    total_sum = interior_angle_sum(sides) # Uses the formula to find out the total sum of interior angles ( eg - 3-2 * 180 = 180 )
+    total_sum = interior_angle_sum(
+        sides)  # Uses the formula to find out the total sum of interior angles ( eg - 3-2 * 180 = 180 )
 
     while True:
 
-        angles = [] #Puts the angles in a list except for one
+        angles = []  # Puts the angles in a list except for one
         current_sum = 0
 
         for i in range(sides - 1):
@@ -159,28 +175,36 @@ def missing_angle_gen():
             angles.append(angle)
             current_sum += angle
 
-        missing_angle = total_sum - current_sum #generates the missing angle for the user to solve
+        missing_angle = total_sum - current_sum  # generates the missing angle for the user to solve
 
-        if 40 <= missing_angle < 180: # A safety measure so that the missing angle won't have an unrealistic number
+        if 40 <= missing_angle < 180:  # A safety measure so that the missing angle won't have an unrealistic number
             break
 
+    #prints out the question
     print(f"\nA {shape_name} has {sides} sides.")
     print(f"Interior angle sum = {total_sum}°")
     print("Here are the angles!"
           f"\n\033[95m{angles}\033[0m\n")
-    print(f"PSSTT Here's the answer!!!:  {missing_angle} ") #Delete after testing!!!!
+    print(f"PSSTT Here's the answer!!!:  {missing_angle} ")  # Delete after testing!!!!
 
     print("\nFind the missing angle:")
 
-    user_answer = int(input("\nAnswer: "))
+    while True:
+        # Int_Check converts the users input into an integer
+        # If the input is not a number the function will
+        # prevent the program from crashing by using the except statement.
+        user_answer = int_check("\nAnswer: ")
 
-    if user_answer == missing_angle:
-        print(f"Correct! The missing angle was {missing_angle}°")
-        return True, f"A {shape_name} has these angles {angles} What is the missing angle? || Your Answer: ({missing_angle}°) Correct✅✅✅"
-    else:
-        print(f"Wrong. The answer was {missing_angle}°")
-        return False, f"A {shape_name} has these angles {angles} What is the missing angle? || Your Answer: ({missing_angle}°) Wrong❌❌❌)"
+        # exit code
+        if user_answer == "xxx":
+            return "xxx", "User Quit"
 
+        if user_answer == missing_angle:
+            print(f"Correct!🥳 The missing angle was {missing_angle}°")
+            return True, f"A {shape_name} has these angles {angles} What is the missing angle? || Your Answer: ({missing_angle}°) Correct✅✅✅" # returns this if the user is correct so that it can be put into question history
+        else:
+            print(f"Wrong!😒 The answer was {missing_angle}°")
+            return False, f"A {shape_name} has these angles {angles} What is the missing angle? || Your Answer: ({user_answer}°) Wrong❌❌❌)" # returns this if the user is wrong so that it can be put into question history
 
 
 # MAIN ROUTINE
@@ -197,15 +221,15 @@ print()
 
 # ask users if they want to see the instruction and display them
 # if requested
-
 want_instructions = string_checker("Do you want to see the instructions? ")
 
 if want_instructions == "yes":
     instructions()
 
-# ask user for number of rounds / infinite
-
+# ask the user for number of rounds or infinite mode
+# Checks if the user inputs an integer using int_check
 num_questions = int_check(" How many questions would you like? Push <enter> for infinite mode:  ")
+
 
 if num_questions == "infinite":
     mode = "infinite"
@@ -213,6 +237,7 @@ if num_questions == "infinite":
 
 while num_questions_asked < num_questions:
 
+    #prints out headings
     if mode == "infinite":
         rounds_heading = f"\n♾️♾️♾️ Question {num_questions_asked + 1} ( Infinite Mode )♾️♾️♾️"
     else:
@@ -221,11 +246,20 @@ while num_questions_asked < num_questions:
     print(rounds_heading)
     print()
 
-    question_random = [angle_type_ques,missing_angle_gen]
-    
-    #randomly selects a question type
+    #Stores both question functions inside a list
+    #So the program can randomly select on each round
+    question_random = [angle_type_ques, missing_angle_gen]
+
+    # randomly selects a question type
     correct, history_quiz_question = random.choice(question_random)()
 
+    # exit code
+    if correct == "xxx":
+        print("\n🙌 Thanks for using Geometry Quiz 🙌")
+        break
+
+    # Updates the questions right / questions wrong counter
+    # for quiz statistics
     if correct:
         questions_right += 1
     else:
@@ -233,27 +267,30 @@ while num_questions_asked < num_questions:
 
     num_questions_asked += 1
 
-    question_history.append(f"Question NO. {num_questions_asked+1-1} || {history_quiz_question} ")
+    # puts the questions in question history
+    question_history.append(f"Question NO. {num_questions_asked + 1 - 1} || {history_quiz_question} ")
 
+    #Increases the total number of questions
+    #so the loop never ends unless the user inputs exit code
     if mode == "infinite":
         num_questions += 1
 
-
-    #main routine ends here
-
-# prints out the users quiz statistics
-print("\n📊📊📊QUIZ STATISTICS📊📊📊")
-print(f"Total number of questions asked💬💬💬: {num_questions_asked}")
-print(f"Total number of questions correct✅✅✅: {questions_right}")
-print(f"Total number of questions wrong❌❌❌: {questions_wrong}")
+    # main routine ends here
 
 # if the user has answered more than 0 questions it prints out their accuracy
 if num_questions_asked > 0:
+
+    # prints out the users quiz statistics
+    print("\n📊📊📊QUIZ STATISTICS📊📊📊")
+    print(f"Total number of questions asked💬💬💬: {num_questions_asked}")
+    print(f"Total number of questions correct✅✅✅: {questions_right}")
+    print(f"Total number of questions wrong❌❌❌: {questions_wrong}")
+
     accuracy = (questions_right / num_questions_asked) * 100
     print(f"🎯🎯Accuracy: {accuracy:.2f}%")
 
-    #ask the user if they want to see their quiz question history
-    see_history = string_checker("\nDo you want to see your game history?")
+    # ask the user if they want to see their quiz question history
+    see_history = string_checker("\nDo you want to see your quiz history?")
     if see_history == "yes":
         for item in question_history:
             print(item)
