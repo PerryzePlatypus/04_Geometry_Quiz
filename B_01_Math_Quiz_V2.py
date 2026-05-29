@@ -163,21 +163,25 @@ def missing_angle_gen():
 
     while True:
 
-        angles = []  # Puts the angles in a list except for one
-        current_sum = 0
+        angles = []  # Stores the generated angles except for one
+        current_sum = 0 # keeps track of the sum of angles being generated
 
-        for i in range(sides - 1):
+        for i in range(sides - 1): # generates all angles except for one ( the missing angle the user has to solve )
 
+            #Calculates the maximum safe angle possible
+            # Leaves at least 40° for the last angle
             max_possible = total_sum - current_sum - 40
 
             angle = random.randint(40, min(160, max_possible))
 
+            # Adds the angles in a list
             angles.append(angle)
+            #updates the current sum of angles
             current_sum += angle
 
-        missing_angle = total_sum - current_sum  # generates the missing angle for the user to solve
+        missing_angle = total_sum - current_sum  # calculates the missing angle for user to solve
 
-        if 40 <= missing_angle < 180:  # A safety measure so that the missing angle won't have an unrealistic number
+        if 40 <= missing_angle < 180:  # checks if the missing angle valid. It must be inbetween 40° and 180°
             break
 
     #prints out the question
@@ -201,10 +205,10 @@ def missing_angle_gen():
 
         if user_answer == missing_angle:
             print(f"Correct!🥳 The missing angle was {missing_angle}°")
-            return True, f"A {shape_name} has these angles {angles} What is the missing angle? || Your Answer: ({missing_angle}°) Correct✅✅✅" # returns this if the user is correct so that it can be put into question history
+            return True, f"A {shape_name} has these angles {angles} What is the missing angle? || Your Answer: ({missing_angle}°) Correct✅✅✅"
         else:
             print(f"Wrong!😒 The answer was {missing_angle}°")
-            return False, f"A {shape_name} has these angles {angles} What is the missing angle? || Your Answer: ({user_answer}°) Wrong❌❌❌)" # returns this if the user is wrong so that it can be put into question history
+            return False, f"A {shape_name} has these angles {angles} What is the missing angle? || Your Answer: ({user_answer}°) Wrong❌❌❌)"
 
 
 # MAIN ROUTINE
